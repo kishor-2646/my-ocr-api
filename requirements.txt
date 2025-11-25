@@ -1,0 +1,58 @@
+fastapi
+uvicorn
+python-multipart
+openbharatocr
+opencv-python-headless
+Pillow
+numpy
+
+
+---
+
+### **Step 2: Push to GitHub**
+
+1.  Create a new **Private Repository** on GitHub (e.g., `my-ocr-api`).
+2.  Open your terminal in the `my_ocr_api` folder.
+3.  Run these commands:
+    ```bash
+    git init
+    git add .
+    git commit -m "Initial commit"
+    git branch -M main
+    git remote add origin https://github.com/YOUR_USERNAME/my-ocr-api.git
+    git push -u origin main
+    ```
+
+---
+
+### **Step 3: Deploy on Render**
+
+1.  Go to [dashboard.render.com](https://dashboard.render.com/).
+2.  Click **New +** -> **Web Service**.
+3.  Select **Build and deploy from a Git repository**.
+4.  Connect your GitHub account and select the `my-ocr-api` repo you just created.
+5.  **Configure the Service:**
+    * **Name:** `my-ocr-service` (or whatever you like)
+    * **Region:** Singapore (closest to India) or Oregon (default).
+    * **Runtime:** Python 3.
+    * **Build Command:** `pip install -r requirements.txt`
+    * **Start Command:** `uvicorn main:app --host 0.0.0.0 --port 10000`
+    * **Instance Type:** Free.
+6.  Click **Create Web Service**.
+
+Render will now build your API. Wait for it to finish. Once you see **"Live"**, copy the URL (e.g., `https://my-ocr-service.onrender.com`).
+
+---
+
+### **Step 4: Update Your Edge Function**
+
+Go back to your **Supabase Edge Function** (`supabase/functions/verify-document/index.ts`) and update the `renderUrl` variable with **your new URL**:
+
+```javascript
+// REPLACE THIS WITH YOUR NEW RENDER URL
+const renderUrl = "https://my-ocr-service-xyz.onrender.com"; 
+
+
+Redeploy the Edge Function:
+
+npx supabase functions deploy verify-document --no-verify-jwt
