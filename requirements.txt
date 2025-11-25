@@ -5,3 +5,4 @@ openbharatocr
 opencv-python-headless
 Pillow
 numpy
+python-dateutil
